@@ -1,0 +1,23 @@
+---
+UserAccountTable:
+    set: system/login/user
+    key-field: username
+    view: UserAccountView
+
+UserAccountView:
+    fields:
+        username: name
+        fullname: full-name
+        userclass:
+            class:
+                default: unauthorized
+        uid:
+            uid:
+                type: int
+                default: 1001
+                minValue: 100
+                maxValue: 64000
+    groups:
+        auth: authentication
+    fields_auth:
+        password: encrypted-password

@@ -12,7 +12,7 @@ for host in junos_hosts:
     with open(filename, 'r') as fh:
         data = yaml.safe_load(fh)
     try:
-        with Device(host=host, user="brook", passwd="onepiece123") as dev:
+        with Device(host=host, user="brook") as dev:
             try:
                 with Config(dev, mode="exclusive") as conf:
                     conf.load(template_path="case1.j2", template_vars=data, format="text")
