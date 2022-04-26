@@ -1,0 +1,29 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Define variable */
+var $ip-address = "10.210.10.210";
+
+match / {
+    <op-script-results> {
+        /* SLAX option 1 */
+        <output> { 
+            expr "The IP address is ";
+            expr $ip-address;
+            expr ".";
+        }
+
+        /* SLAX option 2 */
+        <output> {
+            expr "The IP address is " _ $ip-address _ ".";
+        }
+
+        /* SLAX option 3 */
+        <output> "The IP address is " _ $ip-address _ ".";
+    }
+}

@@ -1,0 +1,22 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Create a variable with the RPC command */
+var $interface-request = <get-interface-information> {
+                             <interface-name> "ge-0/0/1";
+                             <extensive>;
+                         }
+
+/* Pass the variable to the jcs:invoke() function */
+var $intoutput = jcs:invoke($interface-request);
+
+match / {
+    <op-script-results> {
+        <output> $intoutput;
+    }
+}

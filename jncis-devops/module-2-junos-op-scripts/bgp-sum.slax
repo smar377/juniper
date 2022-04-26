@@ -1,0 +1,49 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Define arguments */
+param $autonomous-system;
+
+var $arguments = {
+    <argument> {
+        <name> "autonomous-system";
+        <description> "The autonomous-system number for which we should display results.";
+    }
+}
+
+/* Main script */
+match / {
+
+    /* Get the BGP summary information */
+    var $bgp-info=jcs:invoke('get-bgp-summary-information');
+
+    /* Write the header line */
+    <op-script-results> {
+        <output> "Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...";
+    
+        /* Enclose all the XML in the bgp-information tag so that the Junos OS will know how to format the information that follows */
+        <bgp-information> {
+            if (jcs:empty($autonomous-system)) {
+                /* If no AS is specified, we can just copy all the peer information "as is" */
+                for-each ($bgp-info/bgp-peer) {
+                    <bgp-peer junos:style="terse"> {
+                        copy-of ./*;
+                    }
+                }
+            }
+            else {
+                /* If an AS is specified, we want to copy only the lines from that AS */
+                for-each ($bgp-info/bgp-peer[peer-as=$autonomous-system]) {
+                    <bgp-peer junos:style="terse"> {
+                        copy-of ./*;
+                    }
+                }             
+            }
+        }
+    }
+}
