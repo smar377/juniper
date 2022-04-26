@@ -1,0 +1,109 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Define arguments */
+param $interface;
+
+var $arguments = {
+    <argument> {
+        <name> "interface";
+        <description> "The interface that should be disabled/re-enabled.";
+    }
+}
+
+/* Main script */
+match / {
+    <op-script-results> {
+        /* Error-check input */
+        if (jcs:empty($interface)) {
+            <xnm:error> {
+                <message> "Required parameter 'interface' missing.";   
+            }
+        }
+        else {
+            /* Open connection to mgd */
+            var $con = jcs:open();
+            if (not($con)) {
+                <xnm:error> {
+                    <message> "Unable to connect to local mgd.";
+                }
+            }
+            else {
+                /* XML to disable interface */
+                var $disable-xml = {
+                    <configuration> {
+                        <interfaces> {
+                            <interface> {
+                                <name> $interface;
+                                <disable>;
+                            }
+                        }
+                    }
+                }
+                /* Notify the user we are disabling the interface. */
+                expr jcs:output("Disabling interface...");
+
+                /* Load and commit the configuration */
+                /* Use the special ":=" syntax to copy the results to a temp variable and run the node-set function on that */
+                var $disable-results := {
+                    call jcs:load-configuration($connection=$con, $configuration=$disable-xml);
+                }
+                /* Emit results, including errors/warnings */
+                <output> "Results of commit to disable the interface:";
+                copy-of $disable-results;
+
+                /* Check for errors */
+                if ($disable-results//xnm:error) {
+                    <output> "Script aborted due to errors while disabling the interface.";
+                }
+                else {
+                    /* Print success message */
+                    expr jcs:output("Interface ", $interface, " disabled.");
+
+                    /* Sleep 5 seconds */
+                    expr jcs:sleep(5,0);
+                }
+                /* XML to enable interface */
+                var $enable-xml = {
+                    <configuration> {
+                        <interfaces> {
+                            <interface> {
+                                <name> $interface;
+                                <disable delete="delete">;
+                            }
+                        }
+                    }
+                }
+                /* Notify the user we are enabling the interface. */
+                expr jcs:output("Enabling interface...");
+
+                /* Load and commit the configuration */
+                /* Use the special ":=" syntax to copy the results to a temp variable and run the node-set function on that */
+                var $enable-results := {
+                    call jcs:load-configuration($connection=$con, $configuration=$enable-xml);
+                }
+                /* Emit results, including errors/warnings */
+                <output> "Results of commit to enable the interface:";
+                copy-of $enable-results;
+
+                /* Check for errors */
+                if ($enable-results//xnm:error) {
+                    <xnm:error> {
+                        <message> "Error performing commit to enable the interface. interface still disabled!";
+                    }
+                }
+                else {
+                    /* Print success message */
+                    expr jcs:output("Interface", $interface, " enabled.");
+                }
+            /* Close the mgd connection */
+            expr jcs:close($con);
+            }
+        }
+    }
+}
