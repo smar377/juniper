@@ -1,0 +1,26 @@
+version 1.0;
+
+ns junos = "http://xml.juniper.net/junos/*/junos";
+ns xnm = "http://xml.juniper.net/xnm/1.1/xnm";
+ns jcs = "http://xml.juniper.net/junos/commit-scripts/1.0";
+
+import "../import/junos.xsl";
+
+/* Define arguments */
+param $message;
+
+/* Declare a global variable called $arguments */
+/* Arguments should contain one or more <argument> tags */
+var $arguments = {
+    <argument> {
+        <name> "message";
+        <description> "The message that the script should print.";
+    }
+}
+
+/* Main script */
+match / {
+    <op-script-results> {
+        <output> $message;
+    }
+}
