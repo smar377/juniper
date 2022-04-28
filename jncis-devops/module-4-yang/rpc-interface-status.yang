@@ -1,0 +1,54 @@
+module rpc-interface-status {
+  
+  namespace "http://yang.juniper.net/examples/rpc-cli";
+  prefix rpc-cli;
+
+  import junos-extension-odl {
+    prefix junos-odl;
+  }
+
+  import junos-extension {
+    prefix junos;
+  }
+
+  organization "Juniper Networks, Inc";
+  description "Junos OS YANG module for RPC example";
+  
+  rpc get-interface-status {
+    description "RPC example to retrieve interface status";
+    junos:command "show intf status" {
+      junos:action-execute {
+        junos:script "rpc-interface-status.py";
+      }
+    }
+    input {
+      leaf match {
+        description "Requested interface match condition";
+        type string;
+      }
+    }
+    output {
+      container interface-status-info {
+        container status-info {
+          leaf interface {
+            type string;
+            description "Physical interface name";
+          }
+          leaf status {
+            type string;
+            description "Operation status";
+          }
+          junos-odl:format interface-status-info-format {
+            junos-odl:header "Physical Interface - Status\n";
+            junos-odl:comma;
+            junos-odl:space;
+            junos-odl:line {
+              junos-odl:field "interface";
+              junos-odl:field "status";
+            }
+          }
+        }
+      }
+    }
+  }
+}

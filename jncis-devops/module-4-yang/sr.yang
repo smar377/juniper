@@ -1,0 +1,24 @@
+module sr {
+  yang-version "1";
+  namespace "htpps://yang.juniper.net/yang/demo/sr";
+  prefix "sr";
+  organization "Juniper Networks";
+  description "A demo custom YANG module for static routes";
+  revision "2022-04-28" {
+    description "Initial version";
+  }
+  container sr {
+    description "Configure static routes";
+    list prefix {
+      key "name";
+      leaf name {
+        description "Prefix name";
+        type string;
+      }
+      leaf nh {
+        description "Next-hop";
+        type string;
+      }
+    }
+  }
+}
