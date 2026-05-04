@@ -3,3 +3,4 @@ jxmlease
 lxml
 Jinja2
 PyYAML
+passlib

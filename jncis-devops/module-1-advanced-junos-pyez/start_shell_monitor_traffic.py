@@ -10,5 +10,6 @@ JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
 JUNOS_PASSWD = os.environ.get('JUNOS_PASSWD')
 
 dev = Device(host=JUNOS_HOST, user=JUNOS_USER, passwd=JUNOS_PASSWD)
+dev.open()
 with StartShell(dev) as ss:
     pprint(ss.run('cli -c "monitor traffic interface em0"', this=None, timeout=15))

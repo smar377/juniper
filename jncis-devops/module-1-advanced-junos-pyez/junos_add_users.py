@@ -5,7 +5,7 @@ from jnpr.junos import Device
 
 # Import the custome Table/View
 from myTables.configTables import UserAccountTable
-import crypt
+from passlib.hash import sha512_crypt
 
 JUNOS_HOST = os.environ.get('JUNOS_HOST', 'vmx-11')
 JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
@@ -19,8 +19,8 @@ ua = UserAccountTable(dev)
 ua.username = "nami"
 ua.userclass = "super-user"
 
-# Use 'crypt' to transform password into the salted hash
-ua.password = crypt.crypt(NEW_USER_PASSWD)
+# Use sha512_crypt to generate a salted hash compatible with Junos
+ua.password = sha512_crypt.hash(NEW_USER_PASSWD)
 
 # Generate amd store the configuration data
 ua.append()
