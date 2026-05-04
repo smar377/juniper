@@ -101,14 +101,41 @@ Custom YANG modules and Python scripts that exercise Junos YANG-defined RPCs.
 
 ---
 
-## Lab Topology
+## Lab Setup
 
-Scripts target a two-node vMX lab (`vmx-1` / `vmx-2`). Device credentials used in the examples:
+### Topology
+
+Scripts target a two-node vMX lab (`vmx-1` / `vmx-2`):
 
 - **Host:** `10.254.0.41` / `10.254.0.42` (or `172.25.11.1` in some scripts)
 - **User:** `brook`
 
-> Update host IPs and credentials to match your own lab environment before running any script.
+### Credentials
+
+Module 1 (PyEZ) scripts read device credentials from environment variables. A template is provided at the repo root:
+
+```bash
+cp lab.env.example lab.env
+```
+
+Edit `lab.env` and fill in your values:
+
+```bash
+export JUNOS_HOST=172.25.11.1   # target device IP or hostname
+export JUNOS_USER=brook          # SSH username
+export JUNOS_PASSWD=             # SSH password (leave blank if using SSH keys)
+
+export NEW_USER_PASSWD=          # used by junos_add_users.py only
+```
+
+Then source the file before running any script:
+
+```bash
+source lab.env
+python get_facts_with_cm.py
+```
+
+`lab.env` is listed in `.gitignore` and will never be committed.
 
 ---
 
