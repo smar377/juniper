@@ -1,12 +1,17 @@
 #!/usr/bin/python
 
+import os
 from jnpr.junos import Device
 
 # Import the custome Table/View
 from myTables.configTables import UserAccountTable
 import crypt
 
-dev = Device(host="vmx-11", user="brook")
+JUNOS_HOST = os.environ.get('JUNOS_HOST', 'vmx-11')
+JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
+NEW_USER_PASSWD = os.environ.get('NEW_USER_PASSWD')
+
+dev = Device(host=JUNOS_HOST, user=JUNOS_USER)
 dev.open()
 
 # Create Table instance and associate to the device
@@ -15,7 +20,7 @@ ua.username = "nami"
 ua.userclass = "super-user"
 
 # Use 'crypt' to transform password into the salted hash
-ua.password = crypt.crypt("onepiece123")
+ua.password = crypt.crypt(NEW_USER_PASSWD)
 
 # Generate amd store the configuration data
 ua.append()

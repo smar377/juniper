@@ -1,0 +1,6 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Lab credentials — copy lab.env.example to lab.env and fill in your values
+lab.env

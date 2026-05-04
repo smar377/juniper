@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
+import os
 from jnpr.junos import Device
+
+JUNOS_HOST = os.environ.get('JUNOS_HOST', '172.25.11.1')
+JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
+JUNOS_PASSWD = os.environ.get('JUNOS_PASSWD')
 from jnpr.junos.utils.scp import SCP
 from jnpr.junos.utils.sw import SW
 from jnpr.junos.utils.fs import FS
@@ -13,7 +18,7 @@ IMAGE_FILE = "junos-vmx-x86-64-18.3R1.9.trz"
 REMOTE_PATH = "/var/tmp/"
 
 def main():
-    dev = Device(host="172.25.11.1", user="brook", passwd="onepiece123", normalize=True)
+    dev = Device(host=JUNOS_HOST, user=JUNOS_USER, passwd=JUNOS_PASSWD, normalize=True)
     dev.open()
 
     if dev.facts['junos_info']['re0']['text'] == TARGET_VERSION:
