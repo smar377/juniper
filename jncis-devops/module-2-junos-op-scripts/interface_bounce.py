@@ -1,4 +1,4 @@
-from jnpr.junos import Device 
+from jnpr.junos import Device
 from jnpr.junos.utils.config import Config
 from jnpr.junos.exception import *
 from time import sleep
@@ -17,7 +17,7 @@ Define a change_config function that accepts three parameters:
     3. Human-readable description of the operation
 """
 def change_config(dev_cfg, set_cmds, op_descr):
-    print op_descr + " : Locking the configuration"
+    print(op_descr + " : Locking the configuration")
     try:
         # Lock configuration and process LockError exception
         dev_cfg.lock()
@@ -26,35 +26,35 @@ def change_config(dev_cfg, set_cmds, op_descr):
         # Return False if config change was not successful
         return False
 
-    print op_descr + " : Loading configuration changes"
+    print(op_descr + " : Loading configuration changes")
     try:
         dev_cfg.load(set_cmds, format="set")
     # Load configuration and process ConfigLoadError exception
     except ConfigLoadError as err:
-        print "Unable to load configuration changes: \n" + err
-        print "Unlocking configuration"
+        print("Unable to load configuration changes: \n" + str(err))
+        print("Unlocking configuration")
         try:
             # In case load was not successfull, try to unlocak if possible
             dev_cfg.unlock()
         except UnlockError:
-            print "Error: Unable to unlock configuration"
+            print("Error: Unable to unlock configuration")
         return False
-    
-    print op_descr + " : Committing the configuration"
+
+    print(op_descr + " : Committing the configuration")
     try:
         dev_cfg.commit()
     # Commit configuration and process CommitError exception
     except CommitError:
-        print "Error: Unable to commit configuration"
-        print "Unlocking the configuration"
+        print("Error: Unable to commit configuration")
+        print("Unlocking the configuration")
         try:
             # In case load was not successfull, try to unlocak if possible
             dev_cfg.unlock()
         except UnlockError:
-            print "Error: Unable to unlock configuration"
+            print("Error: Unable to unlock configuration")
         return False
-    
-    print op_descr + " : Unlocking the configuration"
+
+    print(op_descr + " : Unlocking the configuration")
     try:
         dev_cfg.unlock()
     # Unlock configuration and process UnlockError exception
@@ -79,13 +79,13 @@ if __name__ == '__main__':
 
             # Disable the interface. Proceed only if True is returned
             if change_config(conf, "set interfaces " + args.interface + " disable", "Disabling interface"):
-                print "Waiting %s seconds..." % args.delay
-                
+                print("Waiting %s seconds..." % args.delay)
+
                 # Pause the script
                 sleep(float(args.delay))
 
                 # Enable the interface and analyze the result
                 if change_config(conf, "delete interfaces " + args.interface + " disable", "Enabling interface"):
-                    print "Interface bounce script finished successfully!"
+                    print("Interface bounce script finished successfully!")
                 else:
-                    print "Error enabling the interface, it will remain disabled."
+                    print("Error enabling the interface, it will remain disabled.")

@@ -105,9 +105,9 @@ Custom YANG modules and Python scripts that exercise Junos YANG-defined RPCs.
 
 ### Topology
 
-Scripts target a two-node vMX lab (`vmx-1` / `vmx-2`):
+Scripts target a two-node vMX lab (`vmx-11` / `vmx-12`):
 
-- **Host:** `10.254.0.41` / `10.254.0.42` (or `172.25.11.1` in some scripts)
+- **Host:** `172.25.11.1` (single-device scripts) / `vmx-11`, `vmx-12` (multi-device scripts)
 - **User:** `brook`
 
 ### Credentials

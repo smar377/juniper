@@ -22,11 +22,11 @@ if __name__ == '__main__':
         res = dev.rpc.get_interface_information(interface_name=args.interface, terse=True, normalize=True)
         
         # Print interface name and operational status
-        print args.interface + " status: " + res.findtext("logical-interface/oper-status")
-        
+        print(args.interface + " status: " + res.findtext("logical-interface/oper-status"))
+
         # Define XPath string
         XPATH = "//address-family[address-family-name=$family]/interface-address/ifa-local"
 
         # Apply XPath to the result of RPC call, print all addresses
         for elem in res.xpath(XPATH, family=args.family):
-            print args.family + " address " + elem.text
+            print(args.family + " address " + elem.text)
