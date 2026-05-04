@@ -1,17 +1,16 @@
 #!/usr/bin/python
 
 import os
+from time import sleep
 from jnpr.junos import Device
-
-JUNOS_HOST = os.environ.get('JUNOS_HOST', '172.25.11.1')
-JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
-JUNOS_PASSWD = os.environ.get('JUNOS_PASSWD')
 from jnpr.junos.utils.scp import SCP
 from jnpr.junos.utils.sw import SW
 from jnpr.junos.utils.fs import FS
 from jnpr.junos.exception import *
-from time import sleep
-import os
+
+JUNOS_HOST = os.environ.get('JUNOS_HOST', '172.25.11.1')
+JUNOS_USER = os.environ.get('JUNOS_USER', 'brook')
+JUNOS_PASSWD = os.environ.get('JUNOS_PASSWD')
 
 TARGET_VERSION = "18.3R1.9"
 IMAGE_FILE = "junos-vmx-x86-64-18.3R1.9.trz"
@@ -41,7 +40,7 @@ def main():
     print("Installing package...")
     sw = SW(dev)
     install_result = sw.install(package=REMOTE_PATH+IMAGE_FILE, no_copy=True, validate=False, progress=True)
-    
+
     if not install_result:
         print("Installation error, exiting...")
         exit(1)
@@ -71,5 +70,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

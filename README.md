@@ -53,8 +53,7 @@ On-box operational scripts that run directly on the Junos CLI.
 |---|---|
 | `helloworld_on-box.py` | Basic on-box Python hello world |
 | `interface_bounce.py` | Disable then re-enable an interface after a configurable delay |
-| `interface_show.py` | Display interface information |
-| `interface_status.py` | Check operational status of interfaces |
+| `interface_show.py` | Display interface information and address family details |
 | `arguments.py` | Demonstrates passing arguments to on-box scripts |
 
 **SLAX scripts** (XSLT-based Junos scripting language):
@@ -141,10 +140,10 @@ python get_facts_with_cm.py
 
 ## Dependencies
 
+Install Python dependencies via:
+
+```bash
+pip install -r requirements.txt
 ```
-junos-eznc
-jxmlease
-lxml
-jinja2
-salt (+ salt-proxy for SaltStack modules)
-```
+
+For the SaltStack module, follow the installation steps in `jncis-devops/automating-salt/README.txt` — Salt is a system-level install and is not included in `requirements.txt`.
